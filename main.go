@@ -36,17 +36,35 @@ func main() {
 
 	// InteractionCreateEvent type: https://pkg.go.dev/github.com/diamondburned/arikawa/v3@v3.0.0-rc.4/gateway#InteractionCreateEvent
 	s.AddHandler(func(e *gateway.InteractionCreateEvent) {
-		if e.Message.Content == "rng-party" {
-			data := api.InteractionResponse{
+		var data api.InteractionResponse
+
+		if e.Data.InteractionType() == discord.CommandInteractionType {
+			if e.Message.Content == "rng-party" {
+				data = api.InteractionResponse{
+					Type: api.MessageInteractionWithSource,
+					Data: &api.InteractionResponseData{
+						Content: option.NewNullableString("Party Time!"),
+					},
+				}
+			} else {
+				data = api.InteractionResponse{
+					Type: api.MessageInteractionWithSource,
+					Data: &api.InteractionResponseData{
+						Content: option.NewNullableString("Unknown Command"),
+					},
+				}
+			}
+		} else {
+			data = api.InteractionResponse{
 				Type: api.MessageInteractionWithSource,
 				Data: &api.InteractionResponseData{
-					Content: option.NewNullableString("Party Time!"),
+					Content: option.NewNullableString("Unknown Command"),
 				},
 			}
+		}
 
-			if err := s.RespondInteraction(e.ID, e.Token, data); err != nil {
-				log.Println("failed to send interaction callback:", err)
-			}
+		if err := s.RespondInteraction(e.ID, e.Token, data); err != nil {
+			log.Println("failed to send interaction callback:", err)
 		}
 	})
 
