@@ -39,32 +39,18 @@ func main() {
 		var data api.InteractionResponse
 
 		if e.Data.InteractionType() == discord.CommandInteractionType {
-			if e.Message.Content == "rng-party" {
+			if e.InteractionEvent.Data.(*discord.CommandInteraction).Name == "rng-party" {
 				data = api.InteractionResponse{
 					Type: api.MessageInteractionWithSource,
 					Data: &api.InteractionResponseData{
-						Content: option.NewNullableString("Party Time!"),
+						Content: option.NewNullableString("It's Party Time!"),
 					},
 				}
-			} else {
-				data = api.InteractionResponse{
-					Type: api.MessageInteractionWithSource,
-					Data: &api.InteractionResponseData{
-						Content: option.NewNullableString("Unknown Command"),
-					},
-				}
-			}
-		} else {
-			data = api.InteractionResponse{
-				Type: api.MessageInteractionWithSource,
-				Data: &api.InteractionResponseData{
-					Content: option.NewNullableString("Unknown Command"),
-				},
-			}
-		}
 
-		if err := s.RespondInteraction(e.ID, e.Token, data); err != nil {
-			log.Println("failed to send interaction callback:", err)
+				if err := s.RespondInteraction(e.ID, e.Token, data); err != nil {
+					log.Println("failed to send interaction callback:", err)
+				}
+			}
 		}
 	})
 
