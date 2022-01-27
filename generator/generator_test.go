@@ -9,16 +9,20 @@ import (
 func TestRandomLocation(t *testing.T) {
 	tests := []struct {
 		name      string
-		want      string
+		want      func(*testing.T, interface{})
 		assertion assert.ErrorAssertionFunc
 	}{
-		// TODO: Add test cases.
+		{
+			name:      "Test that result is not empty string",
+			want:      func(t *testing.T, r interface{}) { assert.NotEmpty(t, r) },
+			assertion: assert.NoError,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := RandomLocation()
 			tt.assertion(t, err)
-			assert.Equal(t, tt.want, got)
+			tt.want(t, got)
 		})
 	}
 }

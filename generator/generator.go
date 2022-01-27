@@ -9,6 +9,14 @@ import (
 // TODO: implement filters
 // Random location generator
 
+var (
+	//go:embed data/party_chaplins.json
+	chaplinsRaw []byte
+
+	//go:embed data/locations.json
+	locationsRaw []byte
+)
+
 type Location struct {
 	Name     string `json:"name"`
 	Site     string `json:"site"`
@@ -19,8 +27,6 @@ type Location struct {
 type Chaplin string
 
 func RandomLocation() (string, error) {
-	//go:embed ./../data/locations.json
-	var locationsRaw []byte
 	var locations []Location
 
 	if err := json.Unmarshal(locationsRaw, &locations); err != nil {
@@ -34,8 +40,6 @@ func RandomLocation() (string, error) {
 }
 
 func RandomChaplin() (string, error) {
-	//go:embed ./../data/party_chaplins.json
-	var chaplinsRaw []byte
 	var chaplins []Chaplin
 
 	if err := json.Unmarshal(chaplinsRaw, &chaplins); err != nil {
