@@ -18,18 +18,25 @@ func main() {
 	guildID := discord.GuildID(mustSnowflakeEnv("GUILD_ID"))
 
 	token := os.Getenv("BOT_TOKEN")
+
 	if token == "" {
 		log.Fatalln("No $BOT_TOKEN given.")
 	}
 
+	// The State type is also a Session, which is also a Client (so it will inherit the interfaces of those
+	// two nested types - that explains why we can't find CurrentApplication and RespondInteraction as a
+	// method for State; they're methods for Client and/or Session)
 	s := state.New("Bot " + token)
 
 	app, err := s.CurrentApplication()
+
 	if err != nil {
 		log.Fatalln("Failed to get application ID:", err)
 	}
 
+	// InteractionCreateEvent type: https://pkg.go.dev/github.com/diamondburned/arikawa/v3@v3.0.0-rc.4/gateway#InteractionCreateEvent
 	s.AddHandler(func(e *gateway.InteractionCreateEvent) {
+		// The type of data to respond with
 		data := api.InteractionResponse{
 			Type: api.MessageInteractionWithSource,
 			Data: &api.InteractionResponseData{
@@ -37,6 +44,7 @@ func main() {
 			},
 		}
 
+		// `RespondInteraction` is a function that responds to an event with ID `e.ID` with the interaction type `data`
 		if err := s.RespondInteraction(e.ID, e.Token, data); err != nil {
 			log.Println("failed to send interaction callback:", err)
 		}
