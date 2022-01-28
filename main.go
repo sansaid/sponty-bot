@@ -113,6 +113,6 @@ func generatePartyData() *option.NullableStringData {
 		log.Println("failed to get location", err)
 	}
 
-	msg := fmt.Sprintf("Chaplin: %s \n\r Location: %s", chaplin, location)
+	msg := fmt.Sprintf(":partying_face: SPONTANIOOS NITE OUT! \n\r\n\rChaplin: @%s \n\rLocation: %s", chaplin, location)
 	return option.NewNullableString(msg)
 }
