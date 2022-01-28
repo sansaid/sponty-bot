@@ -15,6 +15,12 @@ var (
 
 	//go:embed data/locations.json
 	locationsRaw []byte
+
+	//go:embed data/party_perks.json
+	perksRaw []byte
+
+	//go:embed data/intros.json
+	introsRaw []byte
 )
 
 type Location struct {
@@ -25,6 +31,10 @@ type Location struct {
 }
 
 type Chaplin string
+
+type Perk string
+
+type Intro string
 
 func RandomLocation() (string, error) {
 	var locations []Location
@@ -50,4 +60,30 @@ func RandomChaplin() (string, error) {
 	chaplin := string(chaplins[rng])
 
 	return chaplin, nil
+}
+
+func RandomPerk() (string, error) {
+	var perks []Perk
+
+	if err := json.Unmarshal(perksRaw, &perks); err != nil {
+		return "", err
+	}
+
+	rng := rand.Intn(len(perks))
+	perk := string(perks[rng])
+
+	return perk, nil
+}
+
+func RandomIntro() (string, error) {
+	var intros []Intro
+
+	if err := json.Unmarshal(introsRaw, &intros); err != nil {
+		return "", err
+	}
+
+	rng := rand.Intn(len(intros))
+	intro := string(intros[rng])
+
+	return intro, nil
 }
