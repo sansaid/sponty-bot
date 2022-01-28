@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/diamondburned/arikawa/v3/gateway"
 	"github.com/diamondburned/arikawa/v3/state"
 	"github.com/diamondburned/arikawa/v3/utils/json/option"
+	"github.com/sansaid/sponty/generator"
 )
 
 // To run, do `GUILD_ID="GUILD ID" BOT_TOKEN="TOKEN HERE" go run .`
@@ -43,7 +45,7 @@ func main() {
 				data = api.InteractionResponse{
 					Type: api.MessageInteractionWithSource,
 					Data: &api.InteractionResponseData{
-						Content: option.NewNullableString("It's Party Time!"),
+						Content: generatePartyData(),
 					},
 				}
 
@@ -98,4 +100,19 @@ func mustSnowflakeEnv(env string) discord.Snowflake {
 		log.Fatalf("Invalid snowflake for $%s: %v", env, err)
 	}
 	return s
+}
+
+func generatePartyData() *option.NullableStringData {
+	chaplin, err := generator.RandomChaplin()
+	if err != nil {
+		log.Println("failed to get chaplin", err)
+	}
+
+	location, err := generator.RandomLocation()
+	if err != nil {
+		log.Println("failed to get location", err)
+	}
+
+	msg := fmt.Sprintf("Chaplin: %s \n\r Location: %s", chaplin, location)
+	return option.NewNullableString(msg)
 }
