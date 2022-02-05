@@ -115,11 +115,19 @@ func generatePartyData() *option.NullableStringData {
 
 	adjective, err := generator.RandomAdjective()
 	if err != nil {
-		log.Println("failed to get location", err)
+		log.Println("failed to get adjective", err)
 	}
 
-	msg := fmt.Sprintf("🥳⚠️🎉SPONTANEOUS NITE OUT BROADCAST🎉⚠️🥳"+
-		"\nThe party chaplin is the %s %s"+
-		"\nThe adventure begins at %s", adjective, chaplin, location)
+	perk, err := generator.RandomPerk()
+	if err != nil {
+		log.Println("failed to get perk", err)
+	}
+
+	msg := fmt.Sprintf("🥳⚠️🎉 SPONTANEOUS BNO ANNOUNCEMENT 🎉⚠️🥳"+
+		"\n\r :levitate_tone1: The party chaplin is the %s %s"+
+		"\n\r 🍾 The adventure begins at %s"+
+		"\n\r 📖 Tonight's golden rule: %s",
+		adjective, chaplin, location, perk)
+
 	return option.NewNullableString(msg)
 }
