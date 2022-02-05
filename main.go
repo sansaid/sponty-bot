@@ -113,6 +113,13 @@ func generatePartyData() *option.NullableStringData {
 		log.Println("failed to get location", err)
 	}
 
-	msg := fmt.Sprintf(":partying_face: SPONTANIOOS NITE OUT! \n\r\n\rChaplin: @%s \n\rLocation: %s", chaplin, location)
+	adjective, err := generator.RandomAdjective()
+	if err != nil {
+		log.Println("failed to get location", err)
+	}
+
+	msg := fmt.Sprintf("🥳⚠️🎉SPONTANEOUS NITE OUT BROADCAST🎉⚠️🥳"+
+		"\nThe party chaplin is the %s %s"+
+		"\nThe adventure begins at %s", adjective, chaplin, location)
 	return option.NewNullableString(msg)
 }

@@ -21,6 +21,9 @@ var (
 
 	//go:embed data/intros.json
 	introsRaw []byte
+
+	//go:embed data/adjectives.json
+	adjectivesRaw []byte
 )
 
 type Location struct {
@@ -35,6 +38,8 @@ type Chaplin string
 type Perk string
 
 type Intro string
+
+type Adjective string
 
 func RandomLocation() (string, error) {
 	var locations []Location
@@ -86,4 +91,17 @@ func RandomIntro() (string, error) {
 	intro := string(intros[rng])
 
 	return intro, nil
+}
+
+func RandomAdjective() (string, error) {
+	var adjectives []Adjective
+
+	if err := json.Unmarshal(adjectivesRaw, &adjectives); err != nil {
+		return "", err
+	}
+
+	rng := rand.Intn(len(adjectives))
+	adjective := string(adjectives[rng])
+
+	return adjective, nil
 }
