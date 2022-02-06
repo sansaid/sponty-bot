@@ -14,7 +14,7 @@ import (
 	"github.com/sansaid/sponty/generator"
 )
 
-// To run, do `GUILD_ID="GUILD ID" BOT_TOKEN="TOKEN HERE" go run .`
+// To run, do `GUILD_ID=<GUILD ID> BOT_TOKEN=<TOKEN HERE> go run .`
 
 const (
 	CHAPLIN_ROLE_NAME = "Party Chaplins"
