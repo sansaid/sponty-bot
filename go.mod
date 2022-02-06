@@ -2,7 +2,10 @@ module github.com/sansaid/sponty
 
 go 1.17
 
-require github.com/diamondburned/arikawa/v3 v3.0.0-rc.4
+require (
+	github.com/diamondburned/arikawa/v3 v3.0.0-rc.4
+	github.com/thoas/go-funk v0.9.1
+)
 
 require (
 	github.com/cweill/gotests v1.6.0 // indirect

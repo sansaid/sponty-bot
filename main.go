@@ -16,6 +16,10 @@ import (
 
 // To run, do `GUILD_ID="GUILD ID" BOT_TOKEN="TOKEN HERE" go run .`
 
+const (
+	CHAPLIN_ROLE_NAME = "Party Chaplins"
+)
+
 func main() {
 	guildID := discord.GuildID(mustSnowflakeEnv("GUILD_ID"))
 
@@ -36,6 +40,10 @@ func main() {
 		log.Fatalln("Failed to get application ID:", err)
 	}
 
+	s.AddIntents(gateway.IntentGuilds)
+	s.AddIntents(gateway.IntentGuildMessages)
+	s.AddIntents(gateway.IntentGuildMembers)
+
 	// InteractionCreateEvent type: https://pkg.go.dev/github.com/diamondburned/arikawa/v3@v3.0.0-rc.4/gateway#InteractionCreateEvent
 	s.AddHandler(func(e *gateway.InteractionCreateEvent) {
 		var data api.InteractionResponse
@@ -45,7 +53,7 @@ func main() {
 				data = api.InteractionResponse{
 					Type: api.MessageInteractionWithSource,
 					Data: &api.InteractionResponseData{
-						Content: generatePartyData(),
+						Content: generatePartyData(guildID, s),
 					},
 				}
 
@@ -55,9 +63,6 @@ func main() {
 			}
 		}
 	})
-
-	s.AddIntents(gateway.IntentGuilds)
-	s.AddIntents(gateway.IntentGuildMessages)
 
 	if err := s.Open(context.Background()); err != nil {
 		log.Fatalln("failed to open:", err)
@@ -102,32 +107,36 @@ func mustSnowflakeEnv(env string) discord.Snowflake {
 	return s
 }
 
-func generatePartyData() *option.NullableStringData {
-	chaplin, err := generator.RandomChaplin()
+func generatePartyData(guildId discord.GuildID, client generator.DiscordState) *option.NullableStringData {
+	chaplin, err := generator.RandomChaplin(CHAPLIN_ROLE_NAME, guildId, client)
+
 	if err != nil {
-		log.Println("failed to get chaplin", err)
+		log.Println("failed to get party chaplins:", err)
+		return option.NewNullableString(fmt.Sprintf("**What!?** No party chaplins!?"+
+			" Make yourself useful and create a **%s** role with members.", CHAPLIN_ROLE_NAME))
 	}
 
 	location, err := generator.RandomLocation()
 	if err != nil {
-		log.Println("failed to get location", err)
+		log.Println("failed to get location:", err)
 	}
 
 	adjective, err := generator.RandomAdjective()
 	if err != nil {
-		log.Println("failed to get adjective", err)
+		log.Println("failed to get adjective:", err)
 	}
 
 	perk, err := generator.RandomPerk()
 	if err != nil {
-		log.Println("failed to get perk", err)
+		log.Println("failed to get perk:", err)
 	}
 
 	msg := fmt.Sprintf("🥳⚠️🎉 SPONTANEOUS BNO ANNOUNCEMENT 🎉⚠️🥳"+
-		"\n\r :levitate_tone1: The party chaplin is the %s %s"+
-		"\n\r 🍾 The adventure begins at %s"+
+		"\n\r :levitate_tone1: The party chaplin is the %s <@%s>"+
+		"\n\r 🍾 The adventure begins at **%s**"+
 		"\n\r 📖 Tonight's golden rule: %s",
-		adjective, chaplin, location, perk)
+		adjective, fmt.Sprint(chaplin), location, perk)
+	// ^^ Using fmt.Sprint instead of string(...) to convert user ID to string, since string(...) casts to a rune
 
 	return option.NewNullableString(msg)
 }

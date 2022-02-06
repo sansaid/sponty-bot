@@ -1,5 +1,6 @@
 package utils
 
+// Test dis bitch
 func Must(res interface{}, err error) interface{} {
 	if err != nil {
 		panic(err)
