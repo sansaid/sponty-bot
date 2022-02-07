@@ -25,5 +25,5 @@ jobs:
           # Going straight into running Docker build, since the build also includes running our
           # unit tests
 
-          docker build -t ${GITHUB_REPOSITORY}:${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}
-          docker push ${GITHUB_REPOSITORY}:${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}
+          docker build -t ${GITHUB_REPO}:${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}
+          docker push ${GITHUB_REPO}:${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}
