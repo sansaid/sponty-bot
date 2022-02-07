@@ -22,9 +22,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Run Docker build
         run: |
-          # Going straigh into running Docker build, since the build also includes running our
+          # Going straight into running Docker build, since the build also includes running our
           # unit tests
 
           docker build -t ${GITHUB_REPO}:${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}
           docker push ${GITHUB_REPO}:${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}
-          
