@@ -26,7 +26,8 @@
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"golang.Go",
-		"MS-vsliveshare.vsliveshare-pack"
+		"MS-vsliveshare.vsliveshare-pack",
+		"HashiCorp.terraform"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -41,6 +42,8 @@
 		"terraform": "latest",
 		"git": "latest",
 		"git-lfs": "latest",
-		"github-cli": "latest"
+		"github-cli": "latest",
+		"docker-from-docker": "latest",
+		"kubectl-helm-minikube": "latest"
 	}
 }
