@@ -32,12 +32,12 @@ jobs:
           # Going straight into running Docker build, since the build also includes running our
           # unit tests
 
-          export IMAGE_NAME="${{ github.repository }}:${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}"
-          export LABEL="${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}"
+          export LABEL="${GITHUB_SHA}"
+          export IMAGE_NAME="${{ github.repository }}:${LABEL}"
 
           docker login --username sansaid --password ${{ secrets.DOCKERHUB_TOKEN }}
 
           docker build -t ${IMAGE_NAME} .
 
           docker push ${IMAGE_NAME}
-          aws lightsail push-container-image --service-name ${{ env.APP_NAME }} --label ${lABEL} --image ${IMAGE_NAME}
+          aws lightsail push-container-image --service-name ${{ env.APP_NAME }} --label ${LABEL} --image ${IMAGE_NAME}
