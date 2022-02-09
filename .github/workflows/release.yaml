@@ -20,13 +20,14 @@ jobs:
         uses: unfor19/install-aws-cli-action@v1.0.2
         with:
           arch: amd64
+          lightsailctl: true
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }} 
-      - name: Run Docker build
+      - name: Build and release to Lightsail
         run: |
           # Going straight into running Docker build, since the build also includes running our
           # unit tests
@@ -37,4 +38,4 @@ jobs:
           docker build -t ${IMAGE_NAME} .
           docker push ${IMAGE_NAME}
 
-          aws lightsail push-container-image --region ${{ env.AWS_REGION }} --service-name ${{ env.APP_NAME }} --label ${lABEL} --image ${IMAGE_NAME}
+          aws lightsail push-container-image --service-name ${{ env.APP_NAME }} --label ${lABEL} --image ${IMAGE_NAME}
