@@ -12,6 +12,7 @@ jobs:
       APP_NAME: sponty
       AWS_REGION: eu-west-2
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
