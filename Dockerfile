@@ -7,6 +7,6 @@ COPY . .
 RUN go mod download && \
     go mod verify && \
     go test ./... && \
-    go build -v -o /usr/local/bin/sponty ./...
+    go build -v -o /usr/local/bin/sponty .
 
 CMD ["sponty"]
