@@ -9,7 +9,7 @@ on:
 jobs:
   sponty:
     env:
-      APP_NAME: sponty
+      APP_NAME: sponty-bot
       AWS_REGION: eu-west-2
     runs-on: ubuntu-latest
     environment: production
@@ -27,7 +27,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }} 
-      - name: Build and release to Lightsail
+      - name: Build and release to Docker, Lightsail
         run: |
           # Going straight into running Docker build, since the build also includes running our
           # unit tests
@@ -36,6 +36,6 @@ jobs:
           export LABEL="${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}"
 
           docker build -t ${IMAGE_NAME} .
-          docker push ${IMAGE_NAME}
 
+          docker push ${IMAGE_NAME}
           aws lightsail push-container-image --service-name ${{ env.APP_NAME }} --label ${lABEL} --image ${IMAGE_NAME}
