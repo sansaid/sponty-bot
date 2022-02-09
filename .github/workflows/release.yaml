@@ -35,6 +35,8 @@ jobs:
           export IMAGE_NAME="${{ github.repository }}:${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}"
           export LABEL="${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}"
 
+          docker login --username sansaid --password ${{ secrets.DOCKERHUB_TOKEN }}
+
           docker build -t ${IMAGE_NAME} .
 
           docker push ${IMAGE_NAME}
