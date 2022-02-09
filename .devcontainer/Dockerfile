@@ -12,7 +12,9 @@ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive && \
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" && \
     unzip /tmp/awscliv2.zip -d /tmp && \
-    sudo /tmp/aws/install
+    sudo /tmp/aws/install && \
+    curl "https://s3.us-west-2.amazonaws.com/lightsailctl/latest/linux-amd64/lightsailctl" -o "/usr/local/bin/lightsailctl" && \
+    sudo chmod +x /usr/local/bin/lightsailctl
 
 # [Optional] Uncomment the next lines to use go get to install anything else you need
 # USER vscode
