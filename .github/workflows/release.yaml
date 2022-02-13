@@ -27,13 +27,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }} 
-      - name: Build and release to Docker, Lightsail
+      - name: Build and push to Docker, Lightsail
         run: |
           # Going straight into running Docker build, since the build also includes running our
           # unit tests
 
-          export LABEL="${GITHUB_SHA}"
-          export IMAGE_NAME="${{ github.repository }}:${LABEL}"
+          export LABEL="${GITHUB_SHA}" && echo "LABEL=${LABEL}" >> "${GITHUB_ENV}";
+          export IMAGE_NAME="${{ github.repository }}:${LABEL}" && echo "IMAGE_NAME=${IMAGE_NAME}" >> "${GITHUB_ENV}";
 
           docker login --username sansaid --password ${{ secrets.DOCKERHUB_TOKEN }}
 
@@ -41,3 +41,16 @@ jobs:
 
           docker push ${IMAGE_NAME}
           aws lightsail push-container-image --service-name ${{ env.APP_NAME }} --label ${LABEL} --image ${IMAGE_NAME}
+      - name: Deploy to Lightsail
+        run: |
+          aws lightsail create-container-service-deployment --service-name ${{ env.APP_NAME }} \
+            --containers "{
+            \"sponty\": \
+              { \
+                \"image\": \":${{ env.APP_NAME }}.${LABEL}.latest\", \
+                \"environment\": { \
+                  \"GUILD_ID\": \"${{ secrets.SPONTY_GUILD_ID }}\", \
+                  \"BOT_TOKEN\": \"${{ secrets.SPONTY_BOT_TOKEN }}\" \
+                } \
+              } \
+            }"
