@@ -13,9 +13,6 @@ import (
 )
 
 var (
-	//go:embed data/party_chaplins.json
-	chaplinsRaw []byte
-
 	//go:embed data/locations.json
 	locationsRaw []byte
 
