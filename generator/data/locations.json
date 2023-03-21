@@ -64,5 +64,53 @@
         "site": "",
         "location": "",
         "type": "pub"
-       }
+    },
+    {
+        "name": "The Moderation",
+        "site": "",
+        "location": "",
+        "type": "pub"
+    },
+    {
+        "name": "Oakford Social",
+        "site": "",
+        "location": "",
+        "type": "pub"
+    },
+    {
+        "name": "The Fisherman's Cottage",
+        "site": "",
+        "location": "",
+        "type": "pub"
+    },
+    {
+        "name": "The King's Meadow",
+        "site": "",
+        "location": "",
+        "type": "park"
+    },
+    {
+        "name": "Dinton Pastures",
+        "site": "",
+        "location": "",
+        "type": "park"
+    },
+    {
+        "name": "Caversham Court Gardens",
+        "site": "",
+        "location": "",
+        "type": "park"
+    },
+    {
+        "name": "Thames Valley Park",
+        "site": "",
+        "location": "",
+        "type": "park"
+    },
+    {
+        "name": "Christchurch Meadows",
+        "site": "",
+        "location": "",
+        "type": "park"
+    },
 ]
