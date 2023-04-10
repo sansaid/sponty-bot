@@ -9,48 +9,20 @@ on:
 jobs:
   sponty:
     env:
-      APP_NAME: sponty-bot
-      AWS_REGION: eu-west-2
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Install AWS CLI
-        uses: unfor19/install-aws-cli-action@v1.0.2
-        with:
-          arch: amd64
-          lightsailctl: true
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }} 
-      - name: Build and push to Docker, Lightsail
-        run: |
-          # Going straight into running Docker build, since the build also includes running our
-          # unit tests
-
-          export LABEL="${GITHUB_SHA}" && echo "LABEL=${LABEL}" >> "${GITHUB_ENV}";
-          export IMAGE_NAME="${{ github.repository }}:${LABEL}" && echo "IMAGE_NAME=${IMAGE_NAME}" >> "${GITHUB_ENV}";
-
-          docker login --username sansaid --password ${{ secrets.DOCKERHUB_TOKEN }}
-
-          docker build -t ${IMAGE_NAME} .
-
-          docker push ${IMAGE_NAME}
-          aws lightsail push-container-image --service-name ${{ env.APP_NAME }} --label ${LABEL} --image ${IMAGE_NAME}
-      - name: Deploy to Lightsail
-        run: |
-          aws lightsail create-container-service-deployment --service-name ${{ env.APP_NAME }} \
-            --containers "{
-            \"sponty\": \
-              { \
-                \"image\": \":${{ env.APP_NAME }}.${LABEL}.latest\", \
-                \"environment\": { \
-                  \"GUILD_ID\": \"${{ secrets.SPONTY_GUILD_ID }}\", \
-                  \"BOT_TOKEN\": \"${{ secrets.SPONTY_BOT_TOKEN }}\" \
-                } \
-              } \
-            }"
+      SPONTY_GUILD_ID: ${{ secrets.SPONTY_GUILD_ID }}
+      SPONTY_BOT_TOKEN: ${{ secrets.SPONTY_BOT_TOKEN }}
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+    jobs:
+      set_secrets:
+        name: Update secrets
+        runs-on: ubuntu-latest
+        steps:
+          - run: flyctl secrets set GUILD_ID=$SPONTY_GUILD_ID
+          - run: flyctl secrets set BOT_TOKEN=$SPONTY_BOT_TOKEN
+      deploy:
+        name: Deploy sponty-bot
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v3
+          - uses: superfly/flyctl-actions/setup-flyctl@master
+          - run: flyctl deploy --remote-only
