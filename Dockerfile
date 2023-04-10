@@ -4,7 +4,8 @@ WORKDIR /app
 
 # pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
 COPY . .
-RUN go mod download && \
+RUN git config --global --add safe.directory /app &&
+    go mod download && \
     go mod verify && \
     go build -v -o sponty .
 
