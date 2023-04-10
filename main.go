@@ -204,40 +204,6 @@ func (h *handler) cmdRngParty(ctx context.Context, data cmdroute.CommandData) *a
 	return persistentResponse(msg)
 }
 
-func generatePartyData(guildId discord.GuildID, client generator.DiscordState) *option.NullableStringData {
-	chaplin, err := generator.RandomChaplin(CHAPLIN_ROLE_NAME, guildId, client)
-
-	if err != nil {
-		log.Println("failed to get party chaplins:", err)
-		return option.NewNullableString(fmt.Sprintf("**What!?** No party chaplins!?"+
-			" Make yourself useful and create a **%s** role with members.", CHAPLIN_ROLE_NAME))
-	}
-
-	location, err := generator.RandomLocation("pub")
-	if err != nil {
-		log.Println("failed to get location:", err)
-	}
-
-	intro, err := generator.RandomIntro()
-	if err != nil {
-		log.Println("failed to get intro:", err)
-	}
-
-	perk, err := generator.RandomPerk()
-	if err != nil {
-		log.Println("failed to get perk:", err)
-	}
-
-	msg := fmt.Sprintf("%s"+
-		"\n\r :levitate_tone1: Your party chaplin is <@%s>"+
-		"\n\r 🍾 The adventure begins at **%s**"+
-		"\n\r 📖 Tonight's golden rule: %s",
-		intro, fmt.Sprint(chaplin), location, perk)
-	// ^^ Using fmt.Sprint instead of string(...) to convert user ID to string, since string(...) casts to a rune
-
-	return option.NewNullableString(msg)
-}
-
 func errorResponse(err error) *api.InteractionResponseData {
 	return &api.InteractionResponseData{
 		Content:         option.NewNullableString("**Error:** " + err.Error()),
