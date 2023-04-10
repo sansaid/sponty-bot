@@ -1,49 +1,30 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.209.6/containers/go
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/go
 {
-	"name": "Go",
-	"build": {
-		"dockerfile": "Dockerfile",
-		"args": {
-			// Update the VARIANT arg to pick a version of Go: 1, 1.16, 1.17
-			// Append -bullseye or -buster to pin to an OS version.
-			// Use -bullseye variants on local arm64/Apple Silicon.
-			"VARIANT": "1.17-bullseye",
-			// Options
-			"NODE_VERSION": "16"
-		}
+	"name": "sponty-bot-devcontainer",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/go:0-1-bullseye",
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/dhoeric/features/flyctl:1": {},
+		"ghcr.io/devcontainers/features/terraform:1": {},
+		"ghcr.io/devcontainers/features/aws-cli:1": {}
 	},
-	"runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined" ],
-
-	// Set *default* container specific settings.json values on container create.
-	"settings": {
-		"go.toolsManagement.checkForUpdates": "local",
-		"go.useLanguageServer": true,
-		"go.gopath": "/go",
-		"go.goroot": "/usr/local/go"
-	},
-
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"golang.Go",
-		"MS-vsliveshare.vsliveshare-pack",
-		"HashiCorp.terraform"
+	"runArgs": [
+		"--userns=keep-id"
 	],
-
+	"containerUser": "vscode",
+	"remoteUser": "vscode"
+	// "remoteUser": "root"
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
-
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "go version",
-
-	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "vscode",
-	"features": {
-		"terraform": "latest",
-		"git": "latest",
-		"git-lfs": "latest",
-		"github-cli": "latest",
-		"docker-from-docker": "latest",
-		"kubectl-helm-minikube": "latest"
-	}
+	// Configure tool-specific properties.
+	// "customizations": {},
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
 }
