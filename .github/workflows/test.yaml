@@ -10,5 +10,3 @@ jobs:
   test-sponty:
     name: Test sponty-bot
     uses: ./.github/workflows/reusable-test-go.yaml
-    with:
-      component: .
