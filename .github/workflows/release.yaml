@@ -7,7 +7,12 @@ on:
     - dev
 
 jobs:
-  deploy_sponty:
+  test-sponty:
+    name: Test sponty-bot
+    uses: ./.github/workflows/reusable-test-go.yaml
+    with:
+      component: .
+  deploy-sponty:
     name: Deploy sponty-bot
     runs-on: ubuntu-latest
     environment: production
