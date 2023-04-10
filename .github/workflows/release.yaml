@@ -6,23 +6,21 @@ on:
     - 'release/**'
     - dev
 
+env:
+  SPONTY_GUILD_ID: ${{ secrets.SPONTY_GUILD_ID }}
+  SPONTY_BOT_TOKEN: ${{ secrets.SPONTY_BOT_TOKEN }}
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
 jobs:
-  sponty:
-    env:
-      SPONTY_GUILD_ID: ${{ secrets.SPONTY_GUILD_ID }}
-      SPONTY_BOT_TOKEN: ${{ secrets.SPONTY_BOT_TOKEN }}
-      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-    jobs:
-      set_secrets:
-        name: Update secrets
-        runs-on: ubuntu-latest
-        steps:
-          - run: flyctl secrets set GUILD_ID=$SPONTY_GUILD_ID
-          - run: flyctl secrets set BOT_TOKEN=$SPONTY_BOT_TOKEN
-      deploy:
-        name: Deploy sponty-bot
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@v3
-          - uses: superfly/flyctl-actions/setup-flyctl@master
-          - run: flyctl deploy --remote-only
+  deploy_sponty:
+    name: Deploy sponty-bot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Setting GUILD_ID secret
+        run: flyctl secrets set GUILD_ID=$SPONTY_GUILD_ID
+      - name: Setting BOT_TOKEN secret
+        run: flyctl secrets set BOT_TOKEN=$SPONTY_BOT_TOKEN
+      - name: Run flyctl deploy
+        run: flyctl deploy --remote-only
