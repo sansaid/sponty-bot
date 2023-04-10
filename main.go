@@ -5,8 +5,11 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
+	"strings"
 
 	"github.com/diamondburned/arikawa/v3/api"
+	"github.com/diamondburned/arikawa/v3/api/cmdroute"
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/diamondburned/arikawa/v3/gateway"
 	"github.com/diamondburned/arikawa/v3/state"
@@ -20,9 +23,111 @@ const (
 	CHAPLIN_ROLE_NAME = "Party Chaplins"
 )
 
+var commands = []api.CreateCommandData{
+	{
+		Name:        "rng-party",
+		Description: "Create a new randomly generated party",
+		Options: []discord.CommandOption{
+			&discord.BooleanOption{
+				OptionName:  "generate_chaplin",
+				Description: fmt.Sprintf("(default: true) Whether to randomly generate a party chaplin for your party. This will randomly draw from people who have the role %s", CHAPLIN_ROLE_NAME),
+				Required:    false,
+			},
+			&discord.StringOption{
+				OptionName:  "location_type",
+				Description: "(default: \"pub\") Which location type to host your party",
+				Required:    false,
+				Choices: []discord.StringChoice{
+					{
+						Name:  "pub",
+						Value: "pub",
+					},
+					{
+						Name:  "park",
+						Value: "park",
+					},
+				},
+			},
+		},
+	},
+}
+
+type handler struct {
+	*cmdroute.Router
+	state   *state.State
+	guildID discord.GuildID
+}
+
+func newHandler(s *state.State, g discord.GuildID) *handler {
+	h := &handler{
+		state:   s,
+		guildID: g,
+	}
+
+	h.Router = cmdroute.NewRouter()
+	h.state.AddInteractionHandler(h)
+
+	// Automatically defer handles if they're slow.
+	h.Use(cmdroute.Deferrable(s, cmdroute.DeferOpts{}))
+	h.initIntents()
+	h.initHandlers()
+	h.overwriteCommands(commands)
+
+	return h
+}
+
+func (h *handler) overwriteCommands(newCommands []api.CreateCommandData) {
+	app, err := h.state.CurrentApplication()
+
+	if err != nil {
+		log.Fatalln("Failed to get application ID:", err)
+	}
+
+	oldCommands, err := h.state.GuildCommands(app.ID, h.guildID)
+	if err != nil {
+		log.Fatalln("failed to get guild commands:", err)
+	}
+
+	for _, command := range oldCommands {
+		log.Println("Existing command", command.Name, "found. Deleting..")
+		h.state.DeleteGuildCommand(app.ID, h.guildID, command.ID)
+	}
+
+	for _, command := range newCommands {
+		_, err := h.state.CreateGuildCommand(app.ID, h.guildID, command)
+		if err != nil {
+			log.Fatalln("failed to create guild command:", err)
+		}
+	}
+}
+
+func (h *handler) initIntents() {
+	h.state.AddIntents(gateway.IntentGuilds)
+	h.state.AddIntents(gateway.IntentGuildMessages)
+	h.state.AddIntents(gateway.IntentGuildMembers)
+}
+
+func (h *handler) initHandlers() {
+	// InteractionCreateEvent type: https://pkg.go.dev/github.com/diamondburned/arikawa/v3@v3.0.0-rc.4/gateway#InteractionCreateEvent
+	h.state.AddHandler(func(*gateway.ReadyEvent) {
+		me, _ := h.state.Me()
+		log.Println("Connected to the gateway as ", me.Tag())
+	})
+
+	h.AddFunc("rng-party", h.cmdRngParty)
+}
+
+func (h *handler) run() {
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
+
+	if err := h.state.Connect(ctx); err != nil {
+		log.Fatalln("failed to connect:", err)
+	}
+}
+
 func main() {
 	guildID := discord.GuildID(mustSnowflakeEnv("GUILD_ID"))
-
 	token := os.Getenv("BOT_TOKEN")
 
 	if token == "" {
@@ -32,79 +137,71 @@ func main() {
 	// The State type is also a Session, which is also a Client (so it will inherit the interfaces of those
 	// two nested types - that explains why we can't find CurrentApplication and RespondInteraction as a
 	// method for State; they're methods for Client and/or Session)
-	s := state.New("Bot " + token)
+	h := newHandler(state.New("Bot "+token), guildID)
 
-	app, err := s.CurrentApplication()
-
-	if err != nil {
-		log.Fatalln("Failed to get application ID:", err)
-	}
-
-	s.AddIntents(gateway.IntentGuilds)
-	s.AddIntents(gateway.IntentGuildMessages)
-	s.AddIntents(gateway.IntentGuildMembers)
-
-	// InteractionCreateEvent type: https://pkg.go.dev/github.com/diamondburned/arikawa/v3@v3.0.0-rc.4/gateway#InteractionCreateEvent
-	s.AddHandler(func(e *gateway.InteractionCreateEvent) {
-		var data api.InteractionResponse
-
-		if e.Data.InteractionType() == discord.CommandInteractionType {
-			if e.InteractionEvent.Data.(*discord.CommandInteraction).Name == "rng-party" {
-				data = api.InteractionResponse{
-					Type: api.MessageInteractionWithSource,
-					Data: &api.InteractionResponseData{
-						Content: generatePartyData(guildID, s),
-					},
-				}
-
-				if err := s.RespondInteraction(e.ID, e.Token, data); err != nil {
-					log.Println("failed to send interaction callback:", err)
-				}
-			}
-		}
-	})
-
-	if err := s.Open(context.Background()); err != nil {
-		log.Fatalln("failed to open:", err)
-	}
-	defer s.Close()
-
-	log.Println("Gateway connected. Getting all guild commands.")
-
-	commands, err := s.GuildCommands(app.ID, guildID)
-	if err != nil {
-		log.Fatalln("failed to get guild commands:", err)
-	}
-
-	for _, command := range commands {
-		log.Println("Existing command", command.Name, "found. Deleting..")
-		s.DeleteGuildCommand(app.ID, guildID, command.ID)
-	}
-
-	newCommands := []api.CreateCommandData{
-		{
-			Name:        "rng-party",
-			Description: "Create a new randomly generated party",
-		},
-	}
-
-	for _, command := range newCommands {
-		_, err := s.CreateGuildCommand(app.ID, guildID, command)
-		if err != nil {
-			log.Fatalln("failed to create guild command:", err)
-		}
-	}
-
-	// Block forever.
-	select {}
+	h.run()
 }
 
+// Move to utils
 func mustSnowflakeEnv(env string) discord.Snowflake {
 	s, err := discord.ParseSnowflake(os.Getenv(env))
 	if err != nil {
 		log.Fatalf("Invalid snowflake for $%s: %v", env, err)
 	}
 	return s
+}
+
+func (h *handler) cmdRngParty(ctx context.Context, data cmdroute.CommandData) *api.InteractionResponseData {
+	var msgArray []string
+	var chaplin discord.UserID
+	var options struct {
+		GenerateChaplin bool   `discord:"generate_chaplin"`
+		LocationType    string `discord:"location_type"`
+	}
+
+	if err := data.Options.Unmarshal(&options); err != nil {
+		return errorResponse(err)
+	}
+
+	if options.LocationType == "" {
+		options.LocationType = "pub"
+	}
+
+	intro, err := generator.RandomIntro()
+	if err != nil {
+		log.Println("failed to get intro:", err)
+	}
+	msgArray = append(msgArray, intro)
+
+	if options.GenerateChaplin {
+		var err error
+		chaplin, err = generator.RandomChaplin(CHAPLIN_ROLE_NAME, h.guildID, h.state)
+
+		if err != nil {
+			log.Println("failed to get party chaplins:", err)
+
+			return persistentResponse(fmt.Sprintf("**What!?** No party chaplins!?"+
+				" Make yourself useful and create a **%s** role with members.", CHAPLIN_ROLE_NAME))
+		}
+
+		msgArray = append(msgArray, fmt.Sprintf(":levitate_tone1: Your party chaplin is <@%s>", chaplin.String()))
+	}
+
+	location, err := generator.RandomLocation(options.LocationType)
+	if err != nil {
+		return errorResponse(fmt.Errorf("failed to get location: %w", err))
+	}
+	msgArray = append(msgArray, fmt.Sprintf("🍾 The adventure begins at **%s** (%s)", location.Name, location.Location))
+
+	perk, err := generator.RandomPerk()
+	if err != nil {
+		return errorResponse(fmt.Errorf("failed to get perk: %w", err))
+	}
+	msgArray = append(msgArray, fmt.Sprintf("📖 Tonight's golden rule: %s", perk))
+
+	msg := strings.Join(msgArray, "\n\r")
+
+	return persistentResponse(msg)
 }
 
 func generatePartyData(guildId discord.GuildID, client generator.DiscordState) *option.NullableStringData {
@@ -116,14 +213,14 @@ func generatePartyData(guildId discord.GuildID, client generator.DiscordState) *
 			" Make yourself useful and create a **%s** role with members.", CHAPLIN_ROLE_NAME))
 	}
 
-	location, err := generator.RandomLocation()
+	location, err := generator.RandomLocation("pub")
 	if err != nil {
 		log.Println("failed to get location:", err)
 	}
 
-	adjective, err := generator.RandomAdjective()
+	intro, err := generator.RandomIntro()
 	if err != nil {
-		log.Println("failed to get adjective:", err)
+		log.Println("failed to get intro:", err)
 	}
 
 	perk, err := generator.RandomPerk()
@@ -131,12 +228,26 @@ func generatePartyData(guildId discord.GuildID, client generator.DiscordState) *
 		log.Println("failed to get perk:", err)
 	}
 
-	msg := fmt.Sprintf("🥳⚠️🎉 SPONTANEOUS BNO ANNOUNCEMENT 🎉⚠️🥳"+
-		"\n\r :levitate_tone1: The party chaplin is the %s <@%s>"+
+	msg := fmt.Sprintf("%s"+
+		"\n\r :levitate_tone1: Your party chaplin is <@%s>"+
 		"\n\r 🍾 The adventure begins at **%s**"+
 		"\n\r 📖 Tonight's golden rule: %s",
-		adjective, fmt.Sprint(chaplin), location, perk)
+		intro, fmt.Sprint(chaplin), location, perk)
 	// ^^ Using fmt.Sprint instead of string(...) to convert user ID to string, since string(...) casts to a rune
 
 	return option.NewNullableString(msg)
+}
+
+func errorResponse(err error) *api.InteractionResponseData {
+	return &api.InteractionResponseData{
+		Content:         option.NewNullableString("**Error:** " + err.Error()),
+		Flags:           discord.EphemeralMessage,
+		AllowedMentions: &api.AllowedMentions{ /* none */ },
+	}
+}
+
+func persistentResponse(msg string) *api.InteractionResponseData {
+	return &api.InteractionResponseData{
+		Content: option.NewNullableString(msg),
+	}
 }

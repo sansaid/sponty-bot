@@ -1,116 +1,142 @@
-[
-    {
-        "name": "The Last Crumb",
-        "site": "",
-        "location": "",
-        "type": "pub"
-    },
-    {
-        "name": "The Fox and Hound",
-        "site": "",
-        "location": "",
-        "type": "pub"
-    },
-    {
-        "name": "The Clifton Arms",
-        "site": "",
-        "location": "",
-        "type": "pub"
-    },
-    {
-        "name": "The Purple Turtle",
-        "site": "",
-        "location": "",
-        "type": "club"
-    },
-    {
-        "name": "The Boundary",
-        "site": "",
-        "location": "",
-        "type": "pub"
-    },
-    {
-        "name": "Brewdog",
-        "site": "",
-        "location": "",
-        "type": "pub"
-    },
-    {
-        "name": "Walkabout",
-        "site": "",
-        "location": "",
-        "type": "club"
-    },
-    {
-        "name": "Wild Lime",
-        "site": "",
-        "location": "",
-        "type": "club"
-    },
-    {
-        "name": "Yates",
-        "site": "",
-        "location": "",
-        "type": "pub"
-    },
-    {
-        "name": "The Monk's Retreat",
-        "site": "",
-        "location": "",
-        "type": "pub"
-    },
-    {
-        "name": "Strobelight Honey",
-        "site": "",
-        "location": "",
-        "type": "pub"
-    },
-    {
-        "name": "The Moderation",
-        "site": "",
-        "location": "",
-        "type": "pub"
-    },
-    {
-        "name": "Oakford Social",
-        "site": "",
-        "location": "",
-        "type": "pub"
-    },
-    {
-        "name": "The Fisherman's Cottage",
-        "site": "",
-        "location": "",
-        "type": "pub"
-    },
-    {
-        "name": "The King's Meadow",
-        "site": "",
-        "location": "",
-        "type": "park"
-    },
-    {
-        "name": "Dinton Pastures",
-        "site": "",
-        "location": "",
-        "type": "park"
-    },
-    {
-        "name": "Caversham Court Gardens",
-        "site": "",
-        "location": "",
-        "type": "park"
-    },
-    {
-        "name": "Thames Valley Park",
-        "site": "",
-        "location": "",
-        "type": "park"
-    },
-    {
-        "name": "Christchurch Meadows",
-        "site": "",
-        "location": "",
-        "type": "park"
-    }
-]
+{
+    "pub": [
+        {
+            "name": "The Alehouse",
+            "location": "2 Broad Street, Reading, RG1 2BH"
+        },
+        {
+            "name": "The Retreat",
+            "location": "8 St John St, Reading RG1 4EH"
+        },
+        {
+            "name": "The Three Guineas",
+            "location": "Station Approach, Reading, RG1 1LY"
+        },
+        {
+            "name": "The Sun Inn",
+            "location": "17 Castle Street, Reading, RG1 7SB"
+        },
+        {
+            "name": "The Nag's Head",
+            "location": "5 Russell Street, Reading, RG1 7XD"
+        },
+        {
+            "name": "The Butler",
+            "location": "33-35 Chatham Street, Reading, RG1 7JF"
+        },
+        {
+            "name": "The Horn",
+            "location": "2 Castle Street, Reading, RG1 7RD"
+        },
+        {
+            "name": "The Fisherman's Cottage",
+            "location": "18 Canal Way, Reading, RG1 3HJ"
+        },
+        {
+            "name": "The Allied Arms",
+            "location": "41 St Mary's Butts, Reading, RG1 2LR"
+        },
+        {
+            "name": "The Turk's",
+            "location": "31 London Road, Reading, RG1 5BJ"
+        },
+        {
+            "name": "The Greyfriar",
+            "location": "53 Greyfriars Road, Reading, RG1 1PA"
+        },
+        {
+            "name": "The Fox and Hounds",
+            "location": "51 Gosbrook Road, Caversham, Reading, RG4 8BN"
+        },
+        {
+            "name": "The Moderation",
+            "location": "213 Caversham Road, Reading, RG1 8BB"
+        },
+        {
+            "name": "The Outlook",
+            "location": "76-78 King's Road, Reading, RG1 3BJ"
+        },
+        {
+            "name": "The Eldon Arms",
+            "location": "19 Eldon Terrace, Reading, RG1 4DX"
+        },
+        {
+            "name": "The Prince of Wales",
+            "location": "71-73 Caversham Road, Reading, RG1 8AN"
+        },
+        {
+            "name": "The Hook and Tackle",
+            "location": "Katesgrove Lane, Reading, RG1 2ND"
+        },
+        {
+            "name": "The Bugle",
+            "location": "St Martins Precinct, Reading, RG4 8DH"
+        },
+        {
+            "name": "Market House",
+            "location": "13-14 Market Place, Reading RG1 2EG"
+        },
+        {
+            "name": "The Botanist",
+            "location": "1-5 King St, Reading RG1 2HB"
+        },
+        {
+            "name": "The Hope and Bear",
+            "location": "153-155 Friar St, Reading RG1 1HE"
+        },
+        {
+            "name": "The Last Crumb",
+            "location": "76-78 King's Rd, Reading RG1 3BJ"
+        },
+        {
+            "name": "Brewdog",
+            "location": "11 Castle St, Reading RG1 7SB"
+        },
+        {
+            "name": "The Clifton Arms",
+            "location": "32-33 St John St, Reading RG1 4EB"
+        },
+        {
+            "name": "The Boundary",
+            "location": "2-8 St Johns Rd, Reading RG1 4EH"
+        },
+        {
+            "name": "The Purple Turtle",
+            "location": "9 Gun St, Reading RG1 2JR"
+        },
+        {
+            "name": "The Cocktail Club",
+            "location": "2 Gun St, Reading RG1 2JR"
+        },
+        {
+            "name": "Oakford Social",
+            "location": "53 Blagrave St, Reading RG1 1PZ"
+        },
+        {
+            "name": "The Monk's Retreat",
+            "location": "163 Friar St, Reading RG1 1HE"
+        }
+    ],
+    "park": [
+        {
+            "name": "Dinton Pastures",
+            "location": "Davis St, Hurst, Reading RG10 0TH, United Kingdom"
+        },
+        {
+            "name": "King's Meadow",
+            "location": "Napier Rd, Reading RG1 8DF, United Kingdom"
+        },
+        {
+            "name": "Caversham Court Gardens",
+            "location": "Church Rd, Caversham, Reading RG4 7AD, United Kingdom"
+        },
+        {
+            "name": "Thames Valley Park",
+            "location": "Bennett Rd, Reading RG2 0QX, United Kingdom"
+        },
+        {
+            "name": "Christchurch Meadows",
+            "location": "George St, Caversham, Reading RG4 8BY, United Kingdom"
+        }
+    ]
+}

@@ -1,11 +1,17 @@
-[
-    "Everyone has to wear their clothes backwards",
-    "The party chaplin is the DM - roll for all decisions!",
-    "Everyone has to wear a bald cap",
-    "Everyone has to come in pairs and dress up as their pair",
-    "Dress up as the opposite sex",
-    "Dress up as a pornstar stereotype",
-    "You have to wear your best make up",
-    "You have to bring anything but a cup to drinkg in",
-    "You have to contribute food from your native country"
-]
+{
+    "pub": [
+        "Everyone has to wear their clothes backwards",
+        "The party chaplin is the DM - roll for all decisions!",
+        "Everyone has to come in pairs and dress up as their pair",
+        "Dress up as a pornstar stereotype",
+        "You have to wear your best make up",
+        "You have to bring anything but a cup to drinkg in",
+        "You have to contribute food from your native country",
+        "You cannot order your own drink. Someone else has to order your drink for you (but you can pay for your own drink though).",
+        "Take a selfie with a random stranger at each pub"
+    ],
+    "park": [
+        "You have to drink from anything but a cup",
+        "The theme is: universal foods - everyone brings a dish from a culture of their choice"
+    ]
+}

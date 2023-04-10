@@ -28,9 +28,7 @@ var (
 
 type Location struct {
 	Name     string `json:"name"`
-	Site     string `json:"site"`
 	Location string `json:"location"`
-	Type     string `json:"type"`
 }
 
 type Chaplin string
@@ -74,7 +72,7 @@ func GetRoleMembers(role discord.Role, guildId discord.GuildID, client DiscordSt
 	roleMembers := []discord.Member{}
 
 	for _, member := range members {
-		// Yes, I downloaded a whole package just to check membership because of how much of a pain of an ass
+		// Yes, I downloaded a whole package just to check membership because of how much of a pain in the ass
 		// it was to get Golang to DeepEquals various different types - this person seems to have done the job
 		// for us. Maybe I could have spared us by just nesting another for loop in here. Optimisation for
 		// another time.
@@ -86,17 +84,22 @@ func GetRoleMembers(role discord.Role, guildId discord.GuildID, client DiscordSt
 	return roleMembers, nil
 }
 
-func RandomLocation() (string, error) {
-	var locations []Location
+func RandomLocation(locationType string) (Location, error) {
+	var locationMap map[string][]Location
 
-	if err := json.Unmarshal(locationsRaw, &locations); err != nil {
-		return "", err
+	if err := json.Unmarshal(locationsRaw, &locationMap); err != nil {
+		return Location{}, err
+	}
+
+	locations, ok := locationMap[locationType]
+
+	if !ok {
+		return Location{}, fmt.Errorf("location type unrecognised: %s", locationType)
 	}
 
 	rng := rand.Intn(len(locations))
-	location := locations[rng].Name
 
-	return location, nil
+	return locations[rng], nil
 }
 
 func RandomChaplin(roleName string, guildId discord.GuildID, client DiscordState) (discord.UserID, error) {
