@@ -155,8 +155,8 @@ func (h *handler) cmdRngParty(ctx context.Context, data cmdroute.CommandData) *a
 	var msgArray []string
 	var chaplin discord.UserID
 	var options struct {
-		GenerateChaplin bool   `discord:"generate_chaplin"`
-		LocationType    string `discord:"location_type"`
+		GenerateChaplin bool   `discord?:"generate_chaplin"`
+		LocationType    string `discord?:"location_type"`
 	}
 
 	if err := data.Options.Unmarshal(&options); err != nil {
