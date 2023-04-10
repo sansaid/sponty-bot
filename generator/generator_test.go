@@ -57,11 +57,21 @@ func TestRandomPerk(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := RandomPerk()
+			got, err := RandomPerk("park")
+			tt.assertion(t, err)
+			tt.want(t, got)
+		})
+
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := RandomPerk("pub")
 			tt.assertion(t, err)
 			tt.want(t, got)
 		})
 	}
+	t.Run("An unrecognised location returns an error", func(t *testing.T) {
+		_, err := RandomPerk("doesnotexist")
+		assert.Error(t, err, "location type unrecognised")
+	})
 }
 
 func TestRandomIntro(t *testing.T) {

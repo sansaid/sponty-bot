@@ -193,7 +193,7 @@ func (h *handler) cmdRngParty(ctx context.Context, data cmdroute.CommandData) *a
 	}
 	msgArray = append(msgArray, fmt.Sprintf("🍾 The adventure begins at **%s** (%s)", location.Name, location.Location))
 
-	perk, err := generator.RandomPerk()
+	perk, err := generator.RandomPerk(options.LocationType)
 	if err != nil {
 		return errorResponse(fmt.Errorf("failed to get perk: %w", err))
 	}

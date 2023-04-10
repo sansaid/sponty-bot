@@ -123,11 +123,17 @@ func RandomChaplin(roleName string, guildId discord.GuildID, client DiscordState
 	return chaplin, nil
 }
 
-func RandomPerk() (string, error) {
-	var perks []Perk
+func RandomPerk(locationType string) (string, error) {
+	var perkMap map[string][]Perk
 
-	if err := json.Unmarshal(perksRaw, &perks); err != nil {
+	if err := json.Unmarshal(perksRaw, &perkMap); err != nil {
 		return "", err
+	}
+
+	perks, ok := perkMap[locationType]
+
+	if !ok {
+		return "", fmt.Errorf("location type unrecognised: %s", locationType)
 	}
 
 	rng := rand.Intn(len(perks))
