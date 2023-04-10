@@ -8,6 +8,7 @@ jobs:
   test-go:
     name: Test Golang app
     runs-on: ubuntu-latest
+    working-directory: app
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
