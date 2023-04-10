@@ -1,4 +1,4 @@
-FROM golang:1.17.6 as base
+FROM golang:1.20 as base
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ RUN go mod download && \
     go mod verify && \
     go build -v -o sponty .
 
-FROM golang:1.17.6 as run
+FROM golang:1.20 as run
 
 COPY --from=base /app/sponty /usr/local/bin/sponty
 
