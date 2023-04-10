@@ -30,7 +30,7 @@ var commands = []api.CreateCommandData{
 		Options: []discord.CommandOption{
 			&discord.BooleanOption{
 				OptionName:  "generate_chaplin",
-				Description: "(default: true) Randomly generate a party chaplin for your party",
+				Description: "(default: false) Randomly generate a party chaplin for your party",
 				Required:    false,
 			},
 			&discord.StringOption{

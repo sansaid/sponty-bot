@@ -12,7 +12,7 @@ To ask Sponty to generate a night out for you, just use the command:
 
 There are optional options that can be used to further customise your event:
 
-* `generate_chaplin` (`bool`, default: `true`) - whether to randomly assign a "party chaplin" (i.e. someone that ensures the event goes as planned). This will randomly pick someone in the `Party Chaplin` role on Discord.
+* `generate_chaplin` (`bool`, default: `false`) - whether to randomly assign a "party chaplin" (i.e. someone that ensures the event goes as planned). This will randomly pick someone in the `Party Chaplin` role on Discord.
 * `location_type` ([`park`, `pub`], default: `pub`) - the location type to meet up in. The party perks change per location.
 
 ## Some background
