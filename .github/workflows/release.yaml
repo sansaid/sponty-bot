@@ -11,6 +11,7 @@ jobs:
     name: Test sponty-bot
     uses: ./.github/workflows/reusable-test-go.yaml
   deploy-sponty:
+    needs: [ test-sponty ]
     name: Deploy sponty-bot
     runs-on: ubuntu-latest
     environment: production
