@@ -30,7 +30,7 @@ var commands = []api.CreateCommandData{
 		Options: []discord.CommandOption{
 			&discord.BooleanOption{
 				OptionName:  "generate_chaplin",
-				Description: fmt.Sprintf("(default: true) Whether to randomly generate a party chaplin for your party. This will randomly draw from people who have the role %s", CHAPLIN_ROLE_NAME),
+				Description: "(default: true) Randomly generate a party chaplin for your party",
 				Required:    false,
 			},
 			&discord.StringOption{
