@@ -1,4 +1,4 @@
-FROM golang:1.20 as base
+FROM golang:1.18 as base
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ RUN git config --global --add safe.directory /app && \
     go mod verify && \
     go build -v -o sponty .
 
-FROM golang:1.20 as run
+FROM golang:1.18 as run
 
 COPY --from=base /app/sponty /usr/local/bin/sponty
 

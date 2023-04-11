@@ -1,6 +1,6 @@
 module github.com/sansaid/sponty
 
-go 1.20
+go 1.18
 
 require (
 	github.com/diamondburned/arikawa/v3 v3.2.0
